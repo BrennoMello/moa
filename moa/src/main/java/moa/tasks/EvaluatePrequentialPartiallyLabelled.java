@@ -113,6 +113,9 @@ public class EvaluatePrequentialPartiallyLabelled extends ConceptDriftMainTask {
             Example trainInst = (Example) stream.nextInstance();
             Example testInst = trainInst.copy();
 
+            double[] prediction = learner.getVotesForInstance(testInst);
+            evaluator.addResult(testInst, prediction);
+
             if(rnd.nextInt(100) < percentageUnlabelled){
                 System.out.println("Unlabelled instance");
                 System.out.println(trainInst.getData().toString());
@@ -120,9 +123,6 @@ public class EvaluatePrequentialPartiallyLabelled extends ConceptDriftMainTask {
                 continue;
             }
 
-            double[] prediction = learner.getVotesForInstance(testInst);
-
-            evaluator.addResult(testInst, prediction);
             learner.trainOnInstance(trainInst);
             instancesProcessed++;
 
