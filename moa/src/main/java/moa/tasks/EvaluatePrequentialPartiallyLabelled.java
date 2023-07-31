@@ -125,35 +125,34 @@ public class EvaluatePrequentialPartiallyLabelled extends ConceptDriftMainTask {
             instancesProcessed++;
 
             if(rnd.nextInt(100) >= percentageUnlabelled){
-
                 learner.trainOnInstance(trainInst);
+            }
 
-                if (instancesProcessed % this.sampleFrequencyOption.getValue() == 0
-                        || stream.hasMoreInstances() == false) {
+            if (instancesProcessed % this.sampleFrequencyOption.getValue() == 0
+                    || stream.hasMoreInstances() == false) {
 
-                    long evaluateTime = TimingUtils.getNanoCPUTimeOfCurrentThread();
-                    double time = TimingUtils.nanoTimeToSeconds(evaluateTime - evaluateStartTime);
-                    double timeIncrement = TimingUtils.nanoTimeToSeconds(evaluateTime - lastEvaluateStartTime);
-                    double RAMHoursIncrement = learner.measureByteSize() / (1024.0 * 1024.0 * 1024.0); //GBs
-                    RAMHoursIncrement *= (timeIncrement / 3600.0); //Hours
-                    RAMHours += RAMHoursIncrement;
-                    lastEvaluateStartTime = evaluateTime;
-                    learningCurve.insertEntry(new LearningEvaluation(
-                            new Measurement[]{
-                                    new Measurement(
-                                            "learning evaluation instances",
-                                            instancesProcessed),
-                                    new Measurement(
-                                            "evaluation time ("
-                                                    + (preciseCPUTiming ? "cpu "
-                                                    : "") + "seconds)",
-                                            time),
-                                    new Measurement(
-                                            "model cost (RAM-Hours)",
-                                            RAMHours)
-                            },
-                            evaluator, learner));
-                }
+                long evaluateTime = TimingUtils.getNanoCPUTimeOfCurrentThread();
+                double time = TimingUtils.nanoTimeToSeconds(evaluateTime - evaluateStartTime);
+                double timeIncrement = TimingUtils.nanoTimeToSeconds(evaluateTime - lastEvaluateStartTime);
+                double RAMHoursIncrement = learner.measureByteSize() / (1024.0 * 1024.0 * 1024.0); //GBs
+                RAMHoursIncrement *= (timeIncrement / 3600.0); //Hours
+                RAMHours += RAMHoursIncrement;
+                lastEvaluateStartTime = evaluateTime;
+                learningCurve.insertEntry(new LearningEvaluation(
+                        new Measurement[]{
+                                new Measurement(
+                                        "learning evaluation instances",
+                                        instancesProcessed),
+                                new Measurement(
+                                        "evaluation time ("
+                                                + (preciseCPUTiming ? "cpu "
+                                                : "") + "seconds)",
+                                        time),
+                                new Measurement(
+                                        "model cost (RAM-Hours)",
+                                        RAMHours)
+                        },
+                        evaluator, learner));
             }
         }
 
