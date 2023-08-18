@@ -19,6 +19,7 @@
  */
 package moa.streams;
 
+import java.util.List;
 import java.util.Random;
 
 import moa.capabilities.CapabilitiesHandler;
@@ -51,7 +52,7 @@ import moa.tasks.TaskMonitor;
  * @version $Revision: 7 $
  */
 public class ConceptDriftStream extends AbstractOptionHandler implements
-        InstanceStream, CapabilitiesHandler {
+        InstanceStream, InstanceStreamConceptDrift, CapabilitiesHandler {
 
     @Override
     public String getPurposeString() {
@@ -80,9 +81,9 @@ public class ConceptDriftStream extends AbstractOptionHandler implements
     public IntOption randomSeedOption = new IntOption("randomSeed", 'r',
             "Seed for random noise.", 1);
 
-    protected ExampleStream inputStream;
+    protected InstanceStreamConceptDrift inputStream;
 
-    protected ExampleStream driftStream;
+    protected InstanceStreamConceptDrift driftStream;
 
     protected Random random;
 
@@ -92,8 +93,8 @@ public class ConceptDriftStream extends AbstractOptionHandler implements
     public void prepareForUseImpl(TaskMonitor monitor,
             ObjectRepository repository) {
 
-        this.inputStream = (ExampleStream) getPreparedClassOption(this.streamOption);
-        this.driftStream = (ExampleStream) getPreparedClassOption(this.driftstreamOption);
+        this.inputStream = (InstanceStreamConceptDrift) getPreparedClassOption(this.streamOption);
+        this.driftStream = (InstanceStreamConceptDrift) getPreparedClassOption(this.driftstreamOption);
         this.random = new Random(this.randomSeedOption.getValue());
         numberInstanceStream = 0;
         if (this.alphaOption.getValue() != 0.0) {
@@ -152,5 +153,19 @@ public class ConceptDriftStream extends AbstractOptionHandler implements
             return new ImmutableCapabilities(Capability.VIEW_STANDARD, Capability.VIEW_LITE);
         else
             return new ImmutableCapabilities(Capability.VIEW_STANDARD);
+    }
+
+    @Override
+    public List<Integer> getDriftPositions() {
+        List<Integer> listDriftPosition = this.driftStream.getDriftPositions();
+        listDriftPosition.add(this.positionOption.getValue());
+        return listDriftPosition;
+    }
+
+    @Override
+    public List<Integer> getDriftWidths() {
+        List<Integer> listDriftWidths = this.driftStream.getDriftWidths();
+        listDriftWidths.add(this.widthOption.getValue());
+        return listDriftWidths;
     }
 }

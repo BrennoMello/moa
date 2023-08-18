@@ -69,7 +69,12 @@ public class ALWindowClassificationPerformanceEvaluator extends WindowClassifica
 		return acquisitionRateEstimator.estimation();//((float) acquiredInstances) / (float) seenInstances;
 	}
 
-	
+
+	@Override
+	public void addResult(Example<Instance> example, int groundTruth, double[] classVotes) {
+
+	}
+
 	@Override
     public Measurement[] getPerformanceMeasurements() {
 		Measurement[] measurements = super.getPerformanceMeasurements(); 

@@ -68,7 +68,8 @@ public class BasicConceptDriftPerformanceEvaluator extends AbstractMOAObject
     }
 
     private boolean hasChangeOccurred = false;
-    
+
+
     @Override
     public void addResult(Example<Instance> example, double[] classVotes) {
         Instance inst = example.getData();
@@ -117,6 +118,11 @@ public class BasicConceptDriftPerformanceEvaluator extends AbstractMOAObject
                 this.errorPrediction += Math.abs(classVotes[3] - inst.value(0));
             }
         }
+    }
+
+    @Override
+    public void addResult(Example<Instance> example, int groundTruth, double[] classVotes) {
+
     }
 
     @Override

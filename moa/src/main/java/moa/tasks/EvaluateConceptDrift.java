@@ -160,7 +160,14 @@ public class EvaluateConceptDrift extends ConceptDriftMainTask{
             Example testInst = trainInst; 
             int trueClass = (int) ((Instance)trainInst.getData()).classValue();
             //testInst.setClassMissing();
+            System.out.println("Instance: " + testInst);
             double[] prediction = learner.getVotesForInstance(testInst);
+
+            for (int i = 0; i < prediction.length; i++) {
+                System.out.print("Prediction: " + prediction[i] + " ");
+            }
+            System.out.println();
+
             if (prediction[0] ==1 ){ //Change detected
                 this.getEventsList().add(new ClusterEvent(this, instancesProcessed, "Detected Change", "Drift"));
             }

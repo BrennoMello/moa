@@ -144,6 +144,11 @@ public class BasicClassificationPerformanceEvaluator extends AbstractOptionHandl
         }
     }
 
+    @Override
+    public void addResult(Example<Instance> example, int groundTruth, double[] classVotes) {
+
+    }
+
     private int getMajorityClass() {
         int majorityClass = 0;
         double maxProbClass = 0.0;

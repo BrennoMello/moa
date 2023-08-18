@@ -168,4 +168,9 @@ public class BasicMultiLabelPerformanceEvaluator extends AbstractMOAObject imple
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public void addResult(Example<Instance> example, int groundTruth, double[] classVotes) {
+
+    }
 }

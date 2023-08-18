@@ -156,4 +156,9 @@ implements MultiTargetPerformanceEvaluator, RegressionPerformanceEvaluator{
 		addResult(example, p);
 	}
 
+	@Override
+	public void addResult(Example<Instance> example, int groundTruth, double[] classVotes) {
+
+	}
+
 }

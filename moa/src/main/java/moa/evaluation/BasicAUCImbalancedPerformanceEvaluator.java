@@ -388,6 +388,11 @@ public class BasicAUCImbalancedPerformanceEvaluator extends AbstractOptionHandle
 	}
 
 	@Override
+	public void addResult(Example<Instance> example, int groundTruth, double[] classVotes) {
+
+	}
+
+	@Override
 	public Measurement[] getPerformanceMeasurements() {
 		return new Measurement[] { new Measurement("classified instances", this.totalObservedInstances),
 				new Measurement("AUC", this.aucEstimator.getAUC()),

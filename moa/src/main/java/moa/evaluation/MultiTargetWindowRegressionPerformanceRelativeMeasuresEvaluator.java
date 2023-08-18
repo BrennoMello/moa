@@ -117,7 +117,12 @@ implements MultiTargetPerformanceEvaluator, RegressionPerformanceEvaluator {
     public void addResult(Example<Instance> example, double[] prediction) {
     }
 
-    @Override
+	@Override
+	public void addResult(Example<Instance> example, int groundTruth, double[] classVotes) {
+
+	}
+
+	@Override
     public Measurement[] getPerformanceMeasurements() {
     	return new Measurement[]{
     			new Measurement("classified instances",

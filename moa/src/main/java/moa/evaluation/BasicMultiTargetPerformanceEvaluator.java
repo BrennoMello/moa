@@ -113,4 +113,9 @@ public class BasicMultiTargetPerformanceEvaluator extends AbstractMOAObject
 		
 	}
 
+    @Override
+    public void addResult(Example<Instance> example, int groundTruth, double[] classVotes) {
+
+    }
+
 }

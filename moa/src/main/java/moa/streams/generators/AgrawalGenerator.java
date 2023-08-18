@@ -28,6 +28,8 @@ import moa.core.FastVector;
 import com.yahoo.labs.samoa.instances.Instance;
 import com.yahoo.labs.samoa.instances.Instances;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import moa.core.InstanceExample;
@@ -39,6 +41,7 @@ import com.github.javacliparser.FlagOption;
 import com.github.javacliparser.FloatOption;
 import com.github.javacliparser.IntOption;
 import moa.streams.InstanceStream;
+import moa.streams.InstanceStreamConceptDrift;
 import moa.tasks.TaskMonitor;
 
 /**
@@ -62,7 +65,7 @@ import moa.tasks.TaskMonitor;
  * @version $Revision: 7 $
  */
 public class AgrawalGenerator extends AbstractOptionHandler implements
-        InstanceStream, CapabilitiesHandler {
+        InstanceStream, InstanceStreamConceptDrift, CapabilitiesHandler {
 
     @Override
     public String getPurposeString() {
@@ -86,6 +89,16 @@ public class AgrawalGenerator extends AbstractOptionHandler implements
 
     public FlagOption balanceClassesOption = new FlagOption("balanceClasses",
             'b', "Balance the number of instances of each class.");
+
+    @Override
+    public List<Integer> getDriftPositions() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Integer> getDriftWidths() {
+        return new ArrayList<>();
+    }
 
     protected interface ClassFunction {
 

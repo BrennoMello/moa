@@ -70,8 +70,8 @@ public class RecurrentConceptDriftStream extends ConceptDriftStream {
     public void prepareForUseImpl(TaskMonitor monitor,
             ObjectRepository repository) {
 
-        this.inputStream = (InstanceStream) getPreparedClassOption(this.streamOption);
-        this.driftStream = (InstanceStream) getPreparedClassOption(this.driftstreamOption);
+        this.inputStream = (InstanceStreamConceptDrift) getPreparedClassOption(this.streamOption);
+        this.driftStream = (InstanceStreamConceptDrift) getPreparedClassOption(this.driftstreamOption);
         this.random = new Random(this.randomSeedOption.getValue());
         numberInstanceStream = 0;
         if (this.alphaOption.getValue() != 0.0) {

@@ -52,6 +52,9 @@ public interface LearningPerformanceEvaluator<E extends Example> extends MOAObje
      * probabilities of the test instance in each class
      */
     public void addResult(E example, double[] classVotes);
+
+	public void addResult(E example, int groundTruth, double[] classVotes);
+
     public void addResult(E testInst, Prediction prediction);
 
     /**
