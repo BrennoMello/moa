@@ -1,7 +1,6 @@
 package moa.tasks;
 
 import com.github.javacliparser.IntOption;
-import com.yahoo.labs.samoa.instances.Instance;
 import moa.core.Example;
 import moa.core.Measurement;
 import moa.core.ObjectRepository;
@@ -9,13 +8,10 @@ import moa.core.TimingUtils;
 import moa.evaluation.LearningEvaluation;
 import moa.evaluation.LearningPerformanceEvaluator;
 import moa.evaluation.preview.LearningCurve;
-import moa.learners.ChangeDetectorLearner;
-import moa.learners.ChangeDetectorMultivariateLearner;
+import moa.learners.ChangeDetectorGeneratorsLearner;
 import moa.options.ClassOption;
 import moa.streams.ExampleStream;
 import moa.streams.InstanceStreamConceptDrift;
-import moa.streams.clustering.ClusterEvent;
-import moa.streams.generators.cd.ConceptDriftGenerator;
 
 import java.util.List;
 import java.util.Random;
@@ -25,7 +21,7 @@ public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
     private static final long serialVersionUID = 1L;
 
     public ClassOption learnerOption = new ClassOption("learner", 'l',
-            "Change detector to train.", ChangeDetectorMultivariateLearner.class, "ChangeDetectorMultivariateLearner");
+            "Change detector to train.", ChangeDetectorGeneratorsLearner.class, "ChangeDetectorGeneratorsLearner");
 
     public ClassOption streamOption = new ClassOption("stream", 's',
             "Stream to learn from.", ExampleStream.class,
@@ -81,7 +77,7 @@ public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
 
     @Override
     protected Object doMainTask(TaskMonitor monitor, ObjectRepository repository) {
-        ChangeDetectorMultivariateLearner learner = (ChangeDetectorMultivariateLearner) getPreparedClassOption(this.learnerOption);
+        ChangeDetectorGeneratorsLearner learner = (ChangeDetectorGeneratorsLearner) getPreparedClassOption(this.learnerOption);
         InstanceStreamConceptDrift stream = (InstanceStreamConceptDrift) getPreparedClassOption(this.streamOption);
         //ConceptDriftGenerator stream = (ConceptDriftGenerator) getPreparedClassOption(this.streamOption);
 
