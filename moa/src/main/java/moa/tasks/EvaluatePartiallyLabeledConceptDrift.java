@@ -1,6 +1,8 @@
 package moa.tasks;
 
 import com.github.javacliparser.IntOption;
+import moa.classifiers.AbstractClassifier;
+import moa.classifiers.Classifier;
 import moa.core.Example;
 import moa.core.Measurement;
 import moa.core.ObjectRepository;
@@ -8,7 +10,9 @@ import moa.core.TimingUtils;
 import moa.evaluation.LearningEvaluation;
 import moa.evaluation.LearningPerformanceEvaluator;
 import moa.evaluation.preview.LearningCurve;
+import moa.learners.ChangeDetectorEnsembleMultivariateLearner;
 import moa.learners.ChangeDetectorGeneratorsLearner;
+import moa.learners.Learner;
 import moa.options.ClassOption;
 import moa.streams.ExampleStream;
 import moa.streams.InstanceStreamConceptDrift;
@@ -21,7 +25,7 @@ public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
     private static final long serialVersionUID = 1L;
 
     public ClassOption learnerOption = new ClassOption("learner", 'l',
-            "Change detector to train.", ChangeDetectorGeneratorsLearner.class, "ChangeDetectorGeneratorsLearner");
+            "Change detector to train.", Learner.class, "moa.learners.ChangeDetectorGeneratorsLearner");
 
     public ClassOption streamOption = new ClassOption("stream", 's',
             "Stream to learn from.", ExampleStream.class,
@@ -60,7 +64,8 @@ public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
         return "Evaluates a concept drift detector on a stream by testing then training with each example in sequence.";
     }
 
-    public int findGroundTruth(List<Integer> listDriftPosition, List<Integer> listDriftWidths, long instancesProcessed){
+    //TODO: Change this method to a more general one
+    public int findGroundTruthOld(List<Integer> listDriftPosition, List<Integer> listDriftWidths, long instancesProcessed){
         int groundTruth = 0;
         int avgDriftWidthOld = listDriftWidths.get(0)/2;
         int sumDriftPoints = listDriftPosition.get(0) + avgDriftWidthOld;
@@ -75,9 +80,22 @@ public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
         return groundTruth;
     }
 
+    public int findGroundTruth(List<Integer> listDriftPosition, List<Integer> listDriftWidths, long instancesProcessed){
+        int groundTruth = 0;
+        int sumDriftPoints = listDriftPosition.get(0);
+        for (int i = 0; i < listDriftPosition.size(); i++){
+            //System.out.println("instancesProcessed: " + instancesProcessed + " sumDriftPoints: " + sumDriftPoints);
+            if(instancesProcessed == sumDriftPoints){
+                groundTruth = 1;
+            }
+            sumDriftPoints += listDriftPosition.get(i);
+        }
+        return groundTruth;
+    }
+
     @Override
     protected Object doMainTask(TaskMonitor monitor, ObjectRepository repository) {
-        ChangeDetectorGeneratorsLearner learner = (ChangeDetectorGeneratorsLearner) getPreparedClassOption(this.learnerOption);
+        Classifier learner = (Classifier) getPreparedClassOption(this.learnerOption);
         InstanceStreamConceptDrift stream = (InstanceStreamConceptDrift) getPreparedClassOption(this.streamOption);
         //ConceptDriftGenerator stream = (ConceptDriftGenerator) getPreparedClassOption(this.streamOption);
 
@@ -113,6 +131,8 @@ public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
             //Example testInst = trainInst;
 
             double[] prediction = learner.getVotesForInstance(trainInst);
+
+            //System.out.println("is Change: " + prediction[0] + " Warning Zone: " + prediction[1] + " delay: " + prediction[2] + " estimation: " + prediction[3]);
             int groundTruth = findGroundTruth(listDriftposition, listDriftWidths, instancesProcessed);
             //System.out.println("Ground Truth: " + groundTruth + " instancesProcessed: " + instancesProcessed);
 

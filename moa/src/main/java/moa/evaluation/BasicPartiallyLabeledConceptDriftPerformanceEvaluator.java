@@ -92,9 +92,11 @@ public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends Abstr
             }
 
             //Compute error prediction
+            /*
             if (classVotes.length > 1) {
                 this.errorPrediction += Math.abs(classVotes[3] - this.inputValues);
             }
+            */
         }
     }
 
@@ -110,6 +112,7 @@ public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends Abstr
 
     @Override
     public Measurement[] getPerformanceMeasurements() {
+        System.out.println("Total Delay " + getTotalDelay() + " Number Changes " + getNumberChanges() + " Number Detections " + getNumberDetections());
 
         Measurement[] measurement;
         measurement = new Measurement[]{
@@ -119,12 +122,14 @@ public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends Abstr
                         getNumberDetections()),
                 new Measurement("detected warnings",
                         getNumberWarnings()),
-                new Measurement("prediction error (average)",
-                        getPredictionError() / getTotalWeightObserved()),
+                //new Measurement("prediction error (average)",
+                //        getPredictionError() / getTotalWeightObserved()),
                 new Measurement("true changes",
                         getNumberChanges()),
                 new Measurement("delay detection (average)",
                         getTotalDelay() / getNumberChanges()),
+                new Measurement("delay true detection (average)",
+                        getTotalDelay() / getNumberDetections()),
                 new Measurement("true changes detected",
                         getNumberChangesOccurred()),
                 new Measurement("input values",
