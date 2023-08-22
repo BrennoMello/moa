@@ -130,6 +130,11 @@ public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
             Example trainInst = (Example)  stream.nextInstance();
             //Example testInst = trainInst;
 
+            if(rnd.nextInt(100) >= percentageUnlabelled){
+                //learner.trainOnInstance(((Instance) trainInst.getData()));
+                learner.trainOnInstance(trainInst);
+            }
+
             double[] prediction = learner.getVotesForInstance(trainInst);
 
             //System.out.println("is Change: " + prediction[0] + " Warning Zone: " + prediction[1] + " delay: " + prediction[2] + " estimation: " + prediction[3]);
@@ -149,11 +154,6 @@ public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
                 this.getEventsList().add(new ClusterEvent(this, instancesProcessed, "Detected Change", "Drift"));
             }
             */
-
-            if(rnd.nextInt(100) >= percentageUnlabelled){
-                //learner.trainOnInstance(((Instance) trainInst.getData()));
-                learner.trainOnInstance(trainInst);
-            }
 
             if (instancesProcessed % this.sampleFrequencyOption.getValue() == 0
                     || stream.hasMoreInstances() == false) {

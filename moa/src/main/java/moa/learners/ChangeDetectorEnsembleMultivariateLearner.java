@@ -26,11 +26,14 @@ public class ChangeDetectorEnsembleMultivariateLearner extends AbstractClassifie
 
     protected boolean isEnsembleStart;
 
+    protected int percentageEnsembleAgreement;
+
 
     @Override
     public void resetLearningImpl() {
         this.hashMapDriftDetectionMethod = new HashMap<>();
         this.isEnsembleStart = false;
+        this.percentageEnsembleAgreement = this.percentageEnsembleAgreementOption.getValue();
     }
 
     @Override
@@ -58,7 +61,7 @@ public class ChangeDetectorEnsembleMultivariateLearner extends AbstractClassifie
         //classVotes[2] -> delay
         //classVotes[3] -> estimation
 
-        int percentageEnsembleAgreement = this.percentageEnsembleAgreementOption.getValue();
+
         HashMap<Double, Integer> votesChange = new HashMap<>();
         HashMap<Double, Integer> votesWarning = new HashMap<>();
         double[] output = new double[4];
