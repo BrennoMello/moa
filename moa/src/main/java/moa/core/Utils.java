@@ -1078,8 +1078,8 @@ public final class Utils {
 
     for (int i = 0; i < doubles.length; i++) {
       if ((i == 0) || (doubles[i] > maximum)) {
-	maxIndex = i;
-	maximum = doubles[i];
+	    maxIndex = i;
+	    maximum = doubles[i];
       }
     }
 

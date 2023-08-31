@@ -1,18 +1,14 @@
 package moa.tasks;
 
 import com.github.javacliparser.IntOption;
-import moa.classifiers.AbstractClassifier;
+import com.yahoo.labs.samoa.instances.Instance;
 import moa.classifiers.Classifier;
-import moa.core.Example;
-import moa.core.Measurement;
-import moa.core.ObjectRepository;
-import moa.core.TimingUtils;
+import moa.core.*;
 import moa.evaluation.LearningEvaluation;
 import moa.evaluation.LearningPerformanceEvaluator;
 import moa.evaluation.preview.LearningCurve;
-import moa.learners.ChangeDetectorEnsembleMultivariateLearner;
-import moa.learners.ChangeDetectorGeneratorsLearner;
 import moa.learners.Learner;
+import moa.learners.StuddLearner;
 import moa.options.ClassOption;
 import moa.streams.ExampleStream;
 import moa.streams.InstanceStreamConceptDrift;
@@ -128,10 +124,8 @@ public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
                 && ((maxSeconds < 0) || (secondsElapsed < maxSeconds))) {
 
             Example trainInst = (Example)  stream.nextInstance();
-            //Example testInst = trainInst;
 
             if(rnd.nextInt(100) >= percentageUnlabelled){
-                //learner.trainOnInstance(((Instance) trainInst.getData()));
                 learner.trainOnInstance(trainInst);
             }
 

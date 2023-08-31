@@ -90,15 +90,6 @@ public class AgrawalGenerator extends AbstractOptionHandler implements
     public FlagOption balanceClassesOption = new FlagOption("balanceClasses",
             'b', "Balance the number of instances of each class.");
 
-    @Override
-    public List<Integer> getDriftPositions() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<Integer> getDriftWidths() {
-        return new ArrayList<>();
-    }
 
     protected interface ClassFunction {
 
@@ -443,5 +434,15 @@ public class AgrawalGenerator extends AbstractOptionHandler implements
             return new ImmutableCapabilities(Capability.VIEW_STANDARD, Capability.VIEW_LITE);
         else
             return new ImmutableCapabilities(Capability.VIEW_STANDARD);
+    }
+
+    @Override
+    public List<Integer> getDriftPositions() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Integer> getDriftWidths() {
+        return new ArrayList<>();
     }
 }
