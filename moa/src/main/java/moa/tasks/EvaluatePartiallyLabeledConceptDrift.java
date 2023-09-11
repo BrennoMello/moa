@@ -132,7 +132,9 @@ public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
             double[] prediction = learner.getVotesForInstance(trainInst);
 
             //System.out.println("is Change: " + prediction[0] + " Warning Zone: " + prediction[1] + " delay: " + prediction[2] + " estimation: " + prediction[3]);
-            int groundTruth = findGroundTruth(listDriftposition, listDriftWidths, instancesProcessed);
+            int groundTruth = 0;
+            if(listDriftposition.size()>0)
+                groundTruth = findGroundTruth(listDriftposition, listDriftWidths, instancesProcessed);
             //System.out.println("Ground Truth: " + groundTruth + " instancesProcessed: " + instancesProcessed);
 
             evaluator.addResult(trainInst, groundTruth, prediction);

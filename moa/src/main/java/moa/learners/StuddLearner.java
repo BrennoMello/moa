@@ -15,10 +15,10 @@ public class StuddLearner extends AbstractClassifier {
     private static final long serialVersionUID = -3518369648142099718L;
 
     public ClassOption baseLearnerOption = new ClassOption("baseLearner", 'b',
-            "Base learner to train.", MultiClassClassifier.class, "moa.classifiers.meta.AdaptiveRandomForest");
+            "Base learner to train.", AbstractClassifier.class, "moa.classifiers.meta.AdaptiveRandomForest");
 
     public ClassOption studentLearnerOption = new ClassOption("studentLearner", 's',
-            "Student learner to train.", MultiClassClassifier.class, "moa.classifiers.meta.AdaptiveRandomForest");
+            "Student learner to train.", AbstractClassifier.class, "moa.classifiers.meta.AdaptiveRandomForest");
 
 
     public ClassOption driftDetectionMethodOption = new ClassOption("driftDetectionMethod", 'd',

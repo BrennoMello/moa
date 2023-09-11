@@ -68,9 +68,10 @@ public class ChangeDetectorEnsembleMultivariateLearner extends AbstractClassifie
         for (ChangeDetector changeDetector : this.hashMapDriftDetectionMethod.values()) {
             double [] prediction = changeDetector.getOutput();
 
+            /*
             if(prediction[0] == 1.0) {
                 System.out.println("is Change: " + prediction[0] + " Warning Zone: " + prediction[1] + " delay: " + prediction[2] + " estimation: " + prediction[3]);
-            }
+            }*/
 
             double change = prediction[0];
             double warning = prediction[1];
@@ -120,11 +121,13 @@ public class ChangeDetectorEnsembleMultivariateLearner extends AbstractClassifie
 
         float agreementThreshold = (percentageEnsembleAgreement*this.hashMapDriftDetectionMethod.size())/100;
         int resultVotesChange = 0;
+        /*
         if(votesChange.size()>1){
             System.out.println("Votes change detected "+ votesChange.get(1.0));
-        }
+        }*/
         if(votesChange.containsKey(1.0) && votesChange.get(1.0) >= agreementThreshold){
             resultVotesChange = 1;
+            System.out.println("Change detected and votes"+ votesChange.get(1.0));
         }
 
         output[0] = resultVotesChange;

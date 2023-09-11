@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 
 import moa.capabilities.CapabilitiesHandler;
 import moa.capabilities.Capability;
@@ -49,7 +50,7 @@ import moa.tasks.TaskMonitor;
  * @version $Revision: 7 $
  */
 public class ArffFileStream extends AbstractOptionHandler implements
-        InstanceStream, ConceptDriftGenerator, CapabilitiesHandler {
+        InstanceStream, InstanceStreamConceptDrift, ConceptDriftGenerator, CapabilitiesHandler {
 
     @Override
     public String getPurposeString() {
@@ -190,5 +191,15 @@ public class ArffFileStream extends AbstractOptionHandler implements
             return new ImmutableCapabilities(Capability.VIEW_STANDARD, Capability.VIEW_LITE);
         else
             return new ImmutableCapabilities(Capability.VIEW_STANDARD);
+    }
+
+    @Override
+    public List<Integer> getDriftPositions() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Integer> getDriftWidths() {
+        return new ArrayList<>();
     }
 }
