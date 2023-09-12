@@ -2,6 +2,7 @@ package moa.learners;
 
 import com.github.javacliparser.IntOption;
 import com.yahoo.labs.samoa.instances.Instance;
+import com.yahoo.labs.samoa.instances.Prediction;
 import moa.classifiers.AbstractClassifier;
 import moa.classifiers.MultiClassClassifier;
 import moa.classifiers.core.driftdetection.ChangeDetector;
@@ -28,7 +29,7 @@ public class StuddLearner extends AbstractClassifier {
             'w', "Size of Window", 500);
 
     private LinkedList<Instance> listBatchInstances;
-    private LinkedList<Instance> listBufferInstances;
+
     private AbstractClassifier  baseLearner;
     private AbstractClassifier  studentLearner;
     private ChangeDetector studentChangeDetector;
@@ -42,7 +43,6 @@ public class StuddLearner extends AbstractClassifier {
         this.studentLearner = (AbstractClassifier)  getPreparedClassOption(this.studentLearnerOption);
         this.studentChangeDetector = (ChangeDetector) getPreparedClassOption(this.driftDetectionMethodOption);
         this.listBatchInstances = new LinkedList<>();
-        this.listBufferInstances = new LinkedList<>();
         this.sizeBatchTrain = this.sizeBatchTrainOption.getValue();
         this.isTrainingStudent = false;
     }
@@ -69,7 +69,7 @@ public class StuddLearner extends AbstractClassifier {
             System.out.println("Finished train student");
         }else{
 
-
+            this.listBatchInstances.add(inst);
             double [] predictionBase = this.baseLearner.getVotesForInstance(inst);
             Instance copyInstance = inst.copy();
             int predictBase = Utils.maxIndex(predictionBase);
@@ -77,27 +77,46 @@ public class StuddLearner extends AbstractClassifier {
             double [] predictionStudent = this.studentLearner.getVotesForInstance(copyInstance);
             int predictStudent = Utils.maxIndex(predictionStudent);
             int studentError = predictStudent != predictBase ? 1 : 0;
+
+            if(studentError == 1)
+                System.out.println("student Error " + studentError);
+
             this.studentChangeDetector.input(studentError);
-            this.listBufferInstances.add(copyInstance);
-            //System.out.println("student Error " + studentError);
 
             if(this.studentChangeDetector.getChange()){
                 System.out.println("Change detected");
+                this.studentLearner.resetLearning();
+                this.baseLearner.resetLearning();
 
+                int index = this.listBatchInstances.size() - 1;
                 for (int i=0; i < this.sizeBatchTrain; i++){
-                    Instance instance = this.listBatchInstances.get(i);
+                    Instance instance = this.listBatchInstances.get(index);
                     this.baseLearner.trainOnInstance(instance);
+                    index--;
                 }
 
-                for (Instance instance : this.listBufferInstances){
+                index = this.listBatchInstances.size() - 1;
+                for (int i=0; i < this.sizeBatchTrain; i++){
+                    Instance instance = this.listBatchInstances.get(index);
+                    double [] predictionBaseUpdate = this.baseLearner.getVotesForInstance(instance);
+                    Instance copyInstanceUpdate = inst.copy();
+                    int predictBaseUpdate = Utils.maxIndex(predictionBaseUpdate);
+                    copyInstanceUpdate.setClassValue(predictBaseUpdate);
+                    this.studentLearner.trainOnInstance(copyInstanceUpdate);
+                    index--;
+                }
+
+                // Train with all buffer data
+                /*
+                for (Instance instance : this.listBatchInstances){
                     double [] predictionBaseUpdate = this.baseLearner.getVotesForInstance(instance);
                     Instance copyInstanceUpdate = inst.copy();
                     int predictBaseUpdate = Utils.maxIndex(predictionBaseUpdate);
                     copyInstanceUpdate.setClassValue(predictBaseUpdate);
                     this.studentLearner.trainOnInstance(copyInstanceUpdate);
                 }
-
-                this.listBufferInstances.clear();
+                */
+                System.out.println("Finished retrain student");
             }
 
         }
@@ -114,12 +133,10 @@ public class StuddLearner extends AbstractClassifier {
         return false;
     }
 
-
     @Override
     public void getDescription(StringBuilder sb, int indent) {
 
     }
-
 
     @Override
     protected Measurement[] getModelMeasurementsImpl() {

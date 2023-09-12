@@ -112,7 +112,7 @@ public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends Abstr
 
     @Override
     public Measurement[] getPerformanceMeasurements() {
-        System.out.println("Total Delay " + getTotalDelay() + " Number Changes " + getNumberChanges() + " Number Detections " + getNumberDetections());
+        //System.out.println("Total Delay " + getTotalDelay() + " Number Changes " + getNumberChanges() + " Number Detections " + getNumberDetections());
 
         Measurement[] measurement;
         measurement = new Measurement[]{

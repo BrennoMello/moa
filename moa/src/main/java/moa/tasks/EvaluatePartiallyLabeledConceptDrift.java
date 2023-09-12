@@ -12,7 +12,9 @@ import moa.learners.StuddLearner;
 import moa.options.ClassOption;
 import moa.streams.ExampleStream;
 import moa.streams.InstanceStreamConceptDrift;
+import moa.streams.generators.cd.ConceptDriftGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -23,15 +25,16 @@ public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
     public ClassOption learnerOption = new ClassOption("learner", 'l',
             "Change detector to train.", Learner.class, "moa.learners.ChangeDetectorGeneratorsLearner");
 
-    public ClassOption streamOption = new ClassOption("stream", 's',
+   public ClassOption streamOption = new ClassOption("stream", 's',
             "Stream to learn from.", ExampleStream.class,
             "generators.RandomTreeGenerator");
 
-/*
-    public ClassOption streamOption = new ClassOption("stream", 's',
+    /*
+   public ClassOption streamOption = new ClassOption("stream", 's',
             "Stream to learn from.", ConceptDriftGenerator.class,
             "GradualChangeGenerator");
-*/
+   */
+
 
     public ClassOption evaluatorOption = new ClassOption("evaluator", 'e',
             "Classification performance evaluation method.",
@@ -106,6 +109,9 @@ public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
 
         List<Integer> listDriftposition = stream.getDriftPositions();
         List<Integer> listDriftWidths = stream.getDriftWidths();
+
+        //List<Integer> listDriftposition = new ArrayList<>();
+        //List<Integer> listDriftWidths = new ArrayList<>();
 
         int maxInstances = this.instanceLimitOption.getValue();
         long instancesProcessed = 0;
