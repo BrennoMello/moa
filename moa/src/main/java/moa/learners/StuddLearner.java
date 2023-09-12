@@ -88,22 +88,18 @@ public class StuddLearner extends AbstractClassifier {
                 this.studentLearner.resetLearning();
                 this.baseLearner.resetLearning();
 
-                int index = this.listBatchInstances.size() - 1;
-                for (int i=0; i < this.sizeBatchTrain; i++){
-                    Instance instance = this.listBatchInstances.get(index);
+                for (int i=this.listBatchInstances.size() - this.sizeBatchTrain; i < this.listBatchInstances.size(); i++){
+                    Instance instance = this.listBatchInstances.get(i);
                     this.baseLearner.trainOnInstance(instance);
-                    index--;
                 }
 
-                index = this.listBatchInstances.size() - 1;
-                for (int i=0; i < this.sizeBatchTrain; i++){
-                    Instance instance = this.listBatchInstances.get(index);
+                for (int i=this.listBatchInstances.size() - this.sizeBatchTrain; i < this.listBatchInstances.size(); i++){
+                    Instance instance = this.listBatchInstances.get(i);
                     double [] predictionBaseUpdate = this.baseLearner.getVotesForInstance(instance);
                     Instance copyInstanceUpdate = inst.copy();
                     int predictBaseUpdate = Utils.maxIndex(predictionBaseUpdate);
                     copyInstanceUpdate.setClassValue(predictBaseUpdate);
                     this.studentLearner.trainOnInstance(copyInstanceUpdate);
-                    index--;
                 }
 
                 // Train with all buffer data
