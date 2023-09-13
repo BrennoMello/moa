@@ -1,13 +1,3 @@
-@relation regression
-@attribute C1 {heads, tails}
-@attribute C2 {tails, heads}
-@attribute N1 {val1, val2, val3}
-@attribute R1 numeric
-@attribute N2 {cat1, cat2, cat3}
-@attribute R2 numeric
-
-@data
-heads, heads, val1, 1.1, cat3, 1.1
-tails, tails, val2, 1.2, cat2, 2.2
-heads, tails, val3, 1.3, cat1, 3.3
-
+version https://git-lfs.github.com/spec/v1
+oid sha256:bc6945c97252720ffba875e45e8a952c4a0b4981086072ac330d0305eb9d9efb
+size 302
