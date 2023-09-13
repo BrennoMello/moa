@@ -127,7 +127,7 @@ public class ChangeDetectorEnsembleMultivariateLearner extends AbstractClassifie
         }*/
         if(votesChange.containsKey(1.0) && votesChange.get(1.0) >= agreementThreshold){
             resultVotesChange = 1;
-            System.out.println("Change detected and votes"+ votesChange.get(1.0));
+            System.out.println("Change detected and votes "+ votesChange.get(1.0));
         }
 
         output[0] = resultVotesChange;
