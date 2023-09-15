@@ -2,9 +2,7 @@ package moa.learners;
 
 import com.github.javacliparser.IntOption;
 import com.yahoo.labs.samoa.instances.Instance;
-import com.yahoo.labs.samoa.instances.Prediction;
 import moa.classifiers.AbstractClassifier;
-import moa.classifiers.MultiClassClassifier;
 import moa.classifiers.core.driftdetection.ChangeDetector;
 import moa.core.Measurement;
 import moa.core.Utils;
@@ -71,10 +69,8 @@ public class StuddLearner extends AbstractClassifier {
 
             this.listBatchInstances.add(inst);
             double [] predictionBase = this.baseLearner.getVotesForInstance(inst);
-            Instance copyInstance = inst.copy();
             int predictBase = Utils.maxIndex(predictionBase);
-            copyInstance.setClassValue(predictBase);
-            double [] predictionStudent = this.studentLearner.getVotesForInstance(copyInstance);
+            double [] predictionStudent = this.studentLearner.getVotesForInstance(inst);
             int predictStudent = Utils.maxIndex(predictionStudent);
             int studentError = predictStudent != predictBase ? 1 : 0;
 

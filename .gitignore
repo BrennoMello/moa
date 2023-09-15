@@ -4,3 +4,13 @@
 *~
 *.bak
 
+/datasets/AbruptInsects.csv
+/datasets/AbruptInsects.csv.arff
+/temp/Commands-moa
+/datasets/elecNormNew.arff
+/datasets/kdd99.arff
+/temp/pl.csv
+/temp/pl-2.csv
+/datasets/Posture.csv
+/datasets/Posture.csv.arff
+/datasets/spam_corpus.arff
