@@ -54,7 +54,7 @@ public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends Abstr
         //classVotes[2] -> delay
         //classVotes[3] -> estimation
 
-        //System.out.println("is Change: "+classVotes[0]+" Warning Zone: "+classVotes[1]+" delay: "+classVotes[2]+" estimation: "+classVotes[3]);
+        System.out.println("is Change: "+classVotes[0]+" Warning Zone: "+classVotes[1]+" delay: "+classVotes[2]+" estimation: "+classVotes[3]);
         this.inputValues = (int) inst.classValue();
         //this.inputValues = inst.value(2);
         if (inst.weight() > 0.0 && classVotes.length == 4) {

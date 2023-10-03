@@ -1,5 +1,6 @@
 package moa.learners;
 
+import com.github.javacliparser.FloatOption;
 import com.github.javacliparser.IntOption;
 import com.yahoo.labs.samoa.instances.Instance;
 import moa.classifiers.AbstractClassifier;
@@ -7,9 +8,8 @@ import moa.classifiers.core.driftdetection.ChangeDetector;
 import moa.core.Measurement;
 import moa.options.ClassOption;
 
-import java.util.ArrayList;
+import java.lang.Math;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ChangeDetectorEnsembleMultivariateLearner extends AbstractClassifier {
@@ -19,14 +19,14 @@ public class ChangeDetectorEnsembleMultivariateLearner extends AbstractClassifie
     public ClassOption driftDetectionMethodOption = new ClassOption("driftDetectionMethod", 'd',
             "Drift detection method to use.", ChangeDetector.class, "DDM");
 
-    public IntOption percentageEnsembleAgreementOption = new IntOption("percentageEnsembleAgreement", 'p',
-            "Percentage to use on Ensemble Agreement.", 1, 1, Integer.MAX_VALUE);
+    public FloatOption percentageEnsembleAgreementOption = new FloatOption("percentageEnsembleAgreement", 'p',
+            "Percentage to use on Ensemble Agreement.", 1.00, 1.00, Integer.MAX_VALUE);
 
     protected HashMap<Integer, ChangeDetector> hashMapDriftDetectionMethod;
 
     protected boolean isEnsembleStart;
 
-    protected int percentageEnsembleAgreement;
+    protected double percentageEnsembleAgreement;
 
 
     @Override
@@ -68,10 +68,10 @@ public class ChangeDetectorEnsembleMultivariateLearner extends AbstractClassifie
         for (ChangeDetector changeDetector : this.hashMapDriftDetectionMethod.values()) {
             double [] prediction = changeDetector.getOutput();
 
-            /*
+
             if(prediction[0] == 1.0) {
-                System.out.println("is Change: " + prediction[0] + " Warning Zone: " + prediction[1] + " delay: " + prediction[2] + " estimation: " + prediction[3]);
-            }*/
+                System.out.println("Att " + inst.toString() + "is Change: " + prediction[0] + " Warning Zone: " + prediction[1] + " delay: " + prediction[2] + " estimation: " + prediction[3]);
+            }
 
             double change = prediction[0];
             double warning = prediction[1];
@@ -119,7 +119,7 @@ public class ChangeDetectorEnsembleMultivariateLearner extends AbstractClassifie
         }
 
 
-        float agreementThreshold = (percentageEnsembleAgreement*this.hashMapDriftDetectionMethod.size())/100;
+        float agreementThreshold = Math.round((percentageEnsembleAgreement/100.00)*this.hashMapDriftDetectionMethod.size());
         int resultVotesChange = 0;
         /*
         if(votesChange.size()>1){

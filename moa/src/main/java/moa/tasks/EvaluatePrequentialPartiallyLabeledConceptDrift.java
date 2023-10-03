@@ -1,24 +1,20 @@
 package moa.tasks;
 
 import com.github.javacliparser.IntOption;
-import com.yahoo.labs.samoa.instances.Instance;
 import moa.classifiers.Classifier;
 import moa.core.*;
 import moa.evaluation.LearningEvaluation;
 import moa.evaluation.LearningPerformanceEvaluator;
 import moa.evaluation.preview.LearningCurve;
 import moa.learners.Learner;
-import moa.learners.StuddLearner;
 import moa.options.ClassOption;
 import moa.streams.ExampleStream;
 import moa.streams.InstanceStreamConceptDrift;
-import moa.streams.generators.cd.ConceptDriftGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class EvaluatePartiallyLabeledConceptDrift extends ConceptDriftMainTask{
+public class EvaluatePrequentialPartiallyLabeledConceptDrift extends ConceptDriftMainTask{
 
     private static final long serialVersionUID = 1L;
 

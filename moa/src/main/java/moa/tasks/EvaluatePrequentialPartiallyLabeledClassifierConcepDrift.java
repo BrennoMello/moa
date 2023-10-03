@@ -14,12 +14,10 @@ import moa.evaluation.preview.LearningCurve;
 import moa.learners.Learner;
 import moa.options.ClassOption;
 import moa.streams.ExampleStream;
-import moa.tasks.ConceptDriftMainTask;
-import moa.tasks.TaskMonitor;
 
 import java.util.Random;
 
-public class EvaluatePrequentialPartiallyLabelled extends ConceptDriftMainTask {
+public class EvaluatePrequentialPartiallyLabeledClassifierConcepDrift extends ConceptDriftMainTask {
 
     public String getPurposeString() {
         return "Evaluates a classifier on a stream by testing then training with each example in sequence and partially labelled on stream.";
@@ -90,7 +88,6 @@ public class EvaluatePrequentialPartiallyLabelled extends ConceptDriftMainTask {
 
     @Override
     protected Object doMainTask(TaskMonitor monitor, ObjectRepository repository) {
-        System.out.println("Unlabelled evaluation");
 
         Random rnd = new Random();
         rnd.setSeed(this.seedOption.getValue());
