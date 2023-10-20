@@ -28,6 +28,8 @@ import moa.core.FastVector;
 import com.yahoo.labs.samoa.instances.Instance;
 import com.yahoo.labs.samoa.instances.Instances;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import moa.core.InstanceExample;
 
@@ -37,6 +39,7 @@ import moa.options.AbstractOptionHandler;
 import com.github.javacliparser.FlagOption;
 import com.github.javacliparser.IntOption;
 import moa.streams.InstanceStream;
+import moa.streams.InstanceStreamConceptDrift;
 import moa.tasks.TaskMonitor;
 
 /**
@@ -46,7 +49,7 @@ import moa.tasks.TaskMonitor;
  * @version $Revision: 7 $
  */
 public class WaveformGenerator extends AbstractOptionHandler implements
-        InstanceStream, CapabilitiesHandler {
+        InstanceStream, InstanceStreamConceptDrift, CapabilitiesHandler {
 
     @Override
     public String getPurposeString() {
@@ -172,5 +175,15 @@ public class WaveformGenerator extends AbstractOptionHandler implements
             return new ImmutableCapabilities(Capability.VIEW_STANDARD, Capability.VIEW_LITE);
         else
             return new ImmutableCapabilities(Capability.VIEW_STANDARD);
+    }
+
+    @Override
+    public List<Integer> getDriftPositions() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Integer> getDriftWidths() {
+        return new ArrayList<>();
     }
 }

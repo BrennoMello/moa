@@ -18,7 +18,9 @@ public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends Abstr
     protected double numberWarnings;
 
     protected double delay;
-    protected double errorPrediction;
+    protected double delayFalseAlarm;
+    protected double totalDelayFalseAlarm;
+    protected boolean hasFalseAlarm;
     protected double totalDelay;
 
     protected boolean isWarningZone;
@@ -36,7 +38,7 @@ public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends Abstr
         this.weightObserved = 0.0;
         this.numberDetections = 0.0;
         this.numberDetectionsOccurred = 0.0;
-        this.errorPrediction = 0.0;
+        this.hasFalseAlarm = false;
         this.numberChanges = 0.0;
         this.numberWarnings = 0.0;
         this.delay = 0.0;
@@ -54,7 +56,7 @@ public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends Abstr
         //classVotes[2] -> delay
         //classVotes[3] -> estimation
 
-        System.out.println("is Change: "+classVotes[0]+" Warning Zone: "+classVotes[1]+" delay: "+classVotes[2]+" estimation: "+classVotes[3]);
+        //System.out.println("is Change: "+classVotes[0]+" Warning Zone: "+classVotes[1]+" delay: "+classVotes[2]+" estimation: "+classVotes[3]);
         this.inputValues = (int) inst.classValue();
         //this.inputValues = inst.value(2);
         if (inst.weight() > 0.0 && classVotes.length == 4) {
@@ -71,8 +73,21 @@ public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends Abstr
                     this.totalDelay += this.delay - classVotes[2];
                     this.numberDetectionsOccurred += inst.weight();
                     this.hasChangeOccurred = false;
+                    this.hasFalseAlarm = false;
+                    this.totalDelayFalseAlarm += this.delayFalseAlarm;
+                    this.delayFalseAlarm = 0.0;
+                } else{
+                    this.hasFalseAlarm = true;
+                    this.totalDelayFalseAlarm += this.delayFalseAlarm;
+                    this.delayFalseAlarm = 0.0;
                 }
+
             }
+
+            if(this.hasFalseAlarm == true){
+                this.delayFalseAlarm++;
+            }
+
             if (this.hasChangeOccurred && classVotes[1] == 1.0) {
                 //Warning detected
                 //System.out.println("Warning detected at "+getTotalWeightObserved());
@@ -122,14 +137,16 @@ public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends Abstr
                         getNumberDetections()),
                 new Measurement("detected warnings",
                         getNumberWarnings()),
-                //new Measurement("prediction error (average)",
-                //        getPredictionError() / getTotalWeightObserved()),
                 new Measurement("true changes",
                         getNumberChanges()),
                 new Measurement("delay detection (average)",
                         getTotalDelay() / getNumberChanges()),
                 new Measurement("delay true detection (average)",
                         getTotalDelay() / getNumberDetections()),
+                new Measurement("MTFA (average)",
+                        getTotalDelayFalseAlarm() / (getNumberDetections() - getNumberChangesOccurred())),
+                new Measurement("MDR",
+                        (getNumberChanges() - getNumberChangesOccurred())/getNumberChanges()),
                 new Measurement("true changes detected",
                         getNumberChangesOccurred()),
                 new Measurement("input values",
@@ -139,34 +156,27 @@ public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends Abstr
         return measurement;
     }
 
+    public double getTotalDelayFalseAlarm() {
+        return this.totalDelayFalseAlarm;
+    }
     public double getTotalWeightObserved() {
         return this.weightObserved > 0 ? this.weightObserved : 1.0;
     }
-
     public double getNumberDetections() {
         return this.numberDetections;
     }
-
     public double getInputValues() {
         return this.inputValues;
     }
-
-    public double getPredictionError() {
-        return this.errorPrediction;
-    }
-
     public double getNumberChanges() {
         return this.numberChanges;
     }
-
     public double getNumberChangesOccurred() {
         return  this.numberDetectionsOccurred;
     }
-
     public double getNumberWarnings() {
         return this.numberWarnings;
     }
-
     public double getTotalDelay() {
         return this.totalDelay;
     }

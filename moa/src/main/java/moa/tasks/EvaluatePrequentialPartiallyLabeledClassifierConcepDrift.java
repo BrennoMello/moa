@@ -3,6 +3,7 @@ package moa.tasks;
 import com.github.javacliparser.FileOption;
 import com.github.javacliparser.FloatOption;
 import com.github.javacliparser.IntOption;
+import moa.classifiers.Classifier;
 import moa.classifiers.MultiClassClassifier;
 import moa.core.Example;
 import moa.core.Measurement;
@@ -14,35 +15,30 @@ import moa.evaluation.preview.LearningCurve;
 import moa.learners.Learner;
 import moa.options.ClassOption;
 import moa.streams.ExampleStream;
+import moa.streams.InstanceStreamConceptDrift;
 
+import java.util.List;
 import java.util.Random;
 
 public class EvaluatePrequentialPartiallyLabeledClassifierConcepDrift extends ConceptDriftMainTask {
 
-    public String getPurposeString() {
-        return "Evaluates a classifier on a stream by testing then training with each example in sequence and partially labelled on stream.";
-    }
-
     private static final long serialVersionUID = 1L;
 
+    public String getPurposeString() {
+        return "Evaluates a classifier on a stream by testing then training with each example in sequence and partially labeled on stream.";
+    }
+
     public ClassOption learnerOption = new ClassOption("learner", 'l',
-            "Learner to train.", MultiClassClassifier.class, "moa.classifiers.bayes.NaiveBayes");
+            "Change detector to train.", MultiClassClassifier.class, "moa.classifiers.drift.DetectionConceptDriftMethodClassifier");
 
     public ClassOption streamOption = new ClassOption("stream", 's',
             "Stream to learn from.", ExampleStream.class,
             "generators.RandomTreeGenerator");
 
-    public ClassOption evaluatorClassifierOption = new ClassOption("evaluator", 'e',
+    public ClassOption evaluatorOption = new ClassOption("evaluator", 'e',
             "Classification performance evaluation method.",
             LearningPerformanceEvaluator.class,
-            "WindowClassificationPerformanceEvaluator");
-
-    /*
-    public ClassOption evaluatorDriftOption = new ClassOption("evaluator", 'e',
-            "Classification performance evaluation method.",
-            LearningPerformanceEvaluator.class,
-            "BasicConceptDriftPerformanceEvaluator");
-    */
+            "BasicPartiallyLabeledConceptDriftPerformanceEvaluator");
 
     public IntOption instanceLimitOption = new IntOption("instanceLimit", 'i',
             "Maximum number of instances to test/train on  (-1 = no limit).",
@@ -62,20 +58,6 @@ public class EvaluatePrequentialPartiallyLabeledClassifierConcepDrift extends Co
             "How many instances between memory bound checks.", 100000, 0,
             Integer.MAX_VALUE);
 
-    public FileOption dumpFileOption = new FileOption("dumpFile", 'd',
-            "File to append intermediate csv results to.", null, "csv", true);
-
-    public FileOption outputPredictionFileOption = new FileOption("outputPredictionFile", 'o',
-            "File to append output predictions to.", null, "pred", true);
-
-    //New for prequential method DEPRECATED
-    public IntOption widthOption = new IntOption("width",
-            'w', "Size of Window", 1000);
-
-    public FloatOption alphaOption = new FloatOption("alpha",
-            'a', "Fading factor or exponential smoothing factor", .01);
-    //End New for prequential methods
-
     public IntOption percentageUnlabelledOption = new IntOption("percentageUnlabelled", 'p',
             "Percentage of amount instances unlabelled.", 0);
 
@@ -86,18 +68,35 @@ public class EvaluatePrequentialPartiallyLabeledClassifierConcepDrift extends Co
         return LearningCurve.class;
     }
 
+    public int findGroundTruth(List<Integer> listDriftPosition, List<Integer> listDriftWidths, long instancesProcessed){
+        int groundTruth = 0;
+        int sumDriftPoints = listDriftPosition.get(0);
+        for (int i = 0; i < listDriftPosition.size(); i++){
+            //System.out.println("instancesProcessed: " + instancesProcessed + " sumDriftPoints: " + sumDriftPoints);
+            if(instancesProcessed == sumDriftPoints){
+                groundTruth = 1;
+            }
+            sumDriftPoints += listDriftPosition.get(i);
+        }
+        return groundTruth;
+    }
+
     @Override
     protected Object doMainTask(TaskMonitor monitor, ObjectRepository repository) {
-
         Random rnd = new Random();
         rnd.setSeed(this.seedOption.getValue());
 
-        Learner learner = (Learner) getPreparedClassOption(this.learnerOption);
-        ExampleStream stream = (ExampleStream) getPreparedClassOption(this.streamOption);
-        LearningPerformanceEvaluator evaluator = (LearningPerformanceEvaluator) getPreparedClassOption(this.evaluatorClassifierOption);
+        Classifier learner = (Classifier) getPreparedClassOption(this.learnerOption);
+        InstanceStreamConceptDrift stream = (InstanceStreamConceptDrift) getPreparedClassOption(this.streamOption);
+        LearningPerformanceEvaluator evaluator = (LearningPerformanceEvaluator) getPreparedClassOption(this.evaluatorOption);
+
         LearningCurve learningCurve = new LearningCurve("learning evaluation instances");
 
         learner.setModelContext(stream.getHeader());
+
+        List<Integer> listDriftPosition = stream.getDriftPositions();
+        List<Integer> listDriftWidths = stream.getDriftWidths();
+
         int maxInstances = this.instanceLimitOption.getValue();
         long instancesProcessed = 0;
         int maxSeconds = this.timeLimitOption.getValue();
@@ -115,15 +114,21 @@ public class EvaluatePrequentialPartiallyLabeledClassifierConcepDrift extends Co
                 && ((maxSeconds < 0) || (secondsElapsed < maxSeconds))) {
 
             Example trainInst = (Example) stream.nextInstance();
-            Example testInst = trainInst.copy();
-
-            double[] prediction = learner.getVotesForInstance(testInst);
-            evaluator.addResult(testInst, prediction);
-            instancesProcessed++;
 
             if(rnd.nextInt(100) >= percentageUnlabelled){
                 learner.trainOnInstance(trainInst);
             }
+
+            double[] prediction = learner.getVotesForInstance(trainInst);
+
+            System.out.println("is Change: " + prediction[0] + " Warning Zone: " + prediction[1] + " delay: " + prediction[2] + " estimation: " + prediction[3]);
+            int groundTruth = 0;
+            if(listDriftPosition.size()>0)
+                groundTruth = findGroundTruth(listDriftPosition, listDriftWidths, instancesProcessed);
+            System.out.println("Ground Truth: " + groundTruth + " instancesProcessed: " + instancesProcessed);
+
+            evaluator.addResult(trainInst, groundTruth, prediction);
+            instancesProcessed++;
 
             if (instancesProcessed % this.sampleFrequencyOption.getValue() == 0
                     || stream.hasMoreInstances() == false) {

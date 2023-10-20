@@ -34,6 +34,7 @@ import moa.core.InstanceExample;
 import moa.core.ObjectRepository;
 import moa.options.AbstractOptionHandler;
 import moa.streams.InstanceStream;
+import moa.streams.InstanceStreamConceptDrift;
 import moa.tasks.TaskMonitor;
 
 /**
@@ -58,7 +59,7 @@ import moa.tasks.TaskMonitor;
  * @version $Revision: 1 $
  */
 public class SineGenerator extends AbstractOptionHandler implements
-        InstanceStream {
+        InstanceStream, InstanceStreamConceptDrift {
 
     public static final int NUM_IRRELEVANT_ATTRIBUTES = 2;
 
@@ -212,5 +213,15 @@ public class SineGenerator extends AbstractOptionHandler implements
                 getCLICreationString(InstanceStream.class), attributes, 0));
         this.streamHeader.setClassIndex(this.streamHeader.numAttributes() - 1);
         restart();
+    }
+
+    @Override
+    public List<Integer> getDriftPositions() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Integer> getDriftWidths() {
+        return new ArrayList<>();
     }
 }

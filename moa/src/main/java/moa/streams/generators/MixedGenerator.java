@@ -34,6 +34,7 @@ import moa.core.InstanceExample;
 import moa.core.ObjectRepository;
 import moa.options.AbstractOptionHandler;
 import moa.streams.InstanceStream;
+import moa.streams.InstanceStreamConceptDrift;
 import moa.tasks.TaskMonitor;
 
 /**
@@ -49,7 +50,7 @@ import moa.tasks.TaskMonitor;
  * @version $Revision: 1 $
  */
 public class MixedGenerator extends AbstractOptionHandler implements
-        InstanceStream {
+        InstanceStream, InstanceStreamConceptDrift {
 
     public IntOption functionOption = new IntOption("function", 'f',
             "Classification function used, as defined in the original paper.",
@@ -67,6 +68,16 @@ public class MixedGenerator extends AbstractOptionHandler implements
     protected Random instanceRandom;
 
     protected boolean nextClassShouldBeZero;
+
+    @Override
+    public List<Integer> getDriftPositions() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Integer> getDriftWidths() {
+        return new ArrayList<>();
+    }
 
     protected interface ClassFunction {
 

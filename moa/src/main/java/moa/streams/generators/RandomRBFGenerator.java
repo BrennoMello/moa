@@ -29,6 +29,8 @@ import com.yahoo.labs.samoa.instances.Instance;
 import com.yahoo.labs.samoa.instances.Instances;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import moa.core.InstanceExample;
 
@@ -38,6 +40,7 @@ import moa.core.ObjectRepository;
 import moa.options.AbstractOptionHandler;
 import com.github.javacliparser.IntOption;
 import moa.streams.InstanceStream;
+import moa.streams.InstanceStreamConceptDrift;
 import moa.tasks.TaskMonitor;
 
 /**
@@ -47,7 +50,7 @@ import moa.tasks.TaskMonitor;
  * @version $Revision: 7 $
  */
 public class RandomRBFGenerator extends AbstractOptionHandler implements
-        InstanceStream, CapabilitiesHandler {
+        InstanceStream, InstanceStreamConceptDrift, CapabilitiesHandler {
 
     @Override
     public String getPurposeString() {
@@ -71,6 +74,16 @@ public class RandomRBFGenerator extends AbstractOptionHandler implements
 
     public IntOption numCentroidsOption = new IntOption("numCentroids", 'n',
             "The number of centroids in the model.", 50, 1, Integer.MAX_VALUE);
+
+    @Override
+    public List<Integer> getDriftPositions() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Integer> getDriftWidths() {
+        return new ArrayList<>();
+    }
 
     protected static class Centroid implements Serializable {
 

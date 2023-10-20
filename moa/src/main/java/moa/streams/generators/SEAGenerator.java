@@ -28,6 +28,8 @@ import moa.core.FastVector;
 import com.yahoo.labs.samoa.instances.Instance;
 import com.yahoo.labs.samoa.instances.Instances;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import moa.core.InstanceExample;
 
@@ -37,6 +39,7 @@ import moa.options.AbstractOptionHandler;
 import com.github.javacliparser.FlagOption;
 import com.github.javacliparser.IntOption;
 import moa.streams.InstanceStream;
+import moa.streams.InstanceStreamConceptDrift;
 import moa.tasks.TaskMonitor;
 
 /**
@@ -54,7 +57,7 @@ import moa.tasks.TaskMonitor;
  * @version $Revision: 7 $
  */
 public class SEAGenerator extends AbstractOptionHandler implements
-        InstanceStream, CapabilitiesHandler {
+        InstanceStream, InstanceStreamConceptDrift, CapabilitiesHandler {
 
     @Override
     public String getPurposeString() {
@@ -79,6 +82,16 @@ public class SEAGenerator extends AbstractOptionHandler implements
 
     public IntOption noisePercentageOption = new IntOption("noisePercentage",
             'p', "Percentage of noise to add to the data.", 10, 0, 100);
+
+    @Override
+    public List<Integer> getDriftPositions() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Integer> getDriftWidths() {
+        return new ArrayList<>();
+    }
 
     protected interface ClassFunction {
 
