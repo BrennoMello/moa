@@ -3,6 +3,7 @@ package moa.tasks;
 import com.github.javacliparser.FileOption;
 import com.github.javacliparser.FloatOption;
 import com.github.javacliparser.IntOption;
+import moa.classifiers.AbstractClassifier;
 import moa.classifiers.Classifier;
 import moa.classifiers.MultiClassClassifier;
 import moa.core.Example;
@@ -29,7 +30,7 @@ public class EvaluatePrequentialPartiallyLabeledClassifierConcepDrift extends Co
     }
 
     public ClassOption learnerOption = new ClassOption("learner", 'l',
-            "Change detector to train.", MultiClassClassifier.class, "moa.classifiers.drift.DetectionConceptDriftMethodClassifier");
+            "Change detector to train.", AbstractClassifier.class, "moa.classifiers.drift.DetectionConceptDriftMethodClassifier");
 
     public ClassOption streamOption = new ClassOption("stream", 's',
             "Stream to learn from.", ExampleStream.class,
@@ -121,11 +122,11 @@ public class EvaluatePrequentialPartiallyLabeledClassifierConcepDrift extends Co
 
             double[] prediction = learner.getVotesForInstance(trainInst);
 
-            System.out.println("is Change: " + prediction[0] + " Warning Zone: " + prediction[1] + " delay: " + prediction[2] + " estimation: " + prediction[3]);
+            //System.out.println("is Change: " + prediction[0] + " Warning Zone: " + prediction[1] + " delay: " + prediction[2] + " estimation: " + prediction[3]);
             int groundTruth = 0;
             if(listDriftPosition.size()>0)
                 groundTruth = findGroundTruth(listDriftPosition, listDriftWidths, instancesProcessed);
-            System.out.println("Ground Truth: " + groundTruth + " instancesProcessed: " + instancesProcessed);
+            //System.out.println("Ground Truth: " + groundTruth + " instancesProcessed: " + instancesProcessed);
 
             evaluator.addResult(trainInst, groundTruth, prediction);
             instancesProcessed++;

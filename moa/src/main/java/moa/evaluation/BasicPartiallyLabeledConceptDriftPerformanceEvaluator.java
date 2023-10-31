@@ -67,7 +67,7 @@ public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends Abstr
             this.weightObserved += inst.weight();
             if (classVotes[0] == 1.0) {
                 //Change detected
-                System.out.println("Change detected with delay "+ this.delay );
+                //System.out.println("Change detected with delay "+ this.delay );
                 this.numberDetections += inst.weight();
                 if (this.hasChangeOccurred == true) {
                     this.totalDelay += this.delay - classVotes[2];

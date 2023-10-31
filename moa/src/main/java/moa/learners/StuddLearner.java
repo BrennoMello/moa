@@ -64,7 +64,7 @@ public class StuddLearner extends AbstractClassifier {
             }
 
             this.isTrainingStudent = true;
-            System.out.println("Finished train student");
+            //System.out.println("Finished train student");
         }else{
 
             this.listBatchInstances.add(inst);
@@ -74,8 +74,8 @@ public class StuddLearner extends AbstractClassifier {
             int predictStudent = Utils.maxIndex(predictionStudent);
             int studentError = predictStudent != predictBase ? 1 : 0;
 
-            if(studentError == 1)
-                System.out.println("student Error " + studentError);
+            //if(studentError == 1)
+            //    System.out.println("student Error " + studentError);
 
             this.studentChangeDetector.input(studentError);
 
@@ -108,7 +108,7 @@ public class StuddLearner extends AbstractClassifier {
                     this.studentLearner.trainOnInstance(copyInstanceUpdate);
                 }
                 */
-                System.out.println("Finished retrain student");
+                //System.out.println("Finished retrain student");
             }
 
         }
