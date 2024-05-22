@@ -3,12 +3,12 @@ package moa.tasks;
 import com.github.javacliparser.FlagOption;
 import com.github.javacliparser.IntOption;
 import com.yahoo.labs.samoa.instances.Instance;
+import moa.classifiers.AbstractClassifier;
 import moa.classifiers.Classifier;
 import moa.core.*;
 import moa.evaluation.LearningEvaluation;
 import moa.evaluation.LearningPerformanceEvaluator;
 import moa.evaluation.preview.LearningCurve;
-import moa.learners.Learner;
 import moa.options.ClassOption;
 import moa.streams.ExampleStream;
 import moa.streams.InstanceStreamConceptDrift;
@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class EvaluatePrequentialDelayedConceptDrift extends ConceptDriftMainTask {
+public class EvaluatePrequentialDelayLabeledClassifierConceptDrift extends ConceptDriftMainTask {
 
 
     public String getPurposeString() {
@@ -25,8 +25,11 @@ public class EvaluatePrequentialDelayedConceptDrift extends ConceptDriftMainTask
                 + " training with the example after k other examples (delayed labeling).";
     }
 
+//    public ClassOption learnerOption = new ClassOption("learner", 'l',
+//                "Change detector to train.", Learner.class, "moa.learners.ChangeDetectorGeneratorsLearner");
+
     public ClassOption learnerOption = new ClassOption("learner", 'l',
-            "Change detector to train.", Learner.class, "moa.learners.ChangeDetectorGeneratorsLearner");
+           "Change detector to train.", AbstractClassifier.class, "moa.classifiers.drift.DetectionConceptDriftMethodClassifier");
 
 
     public ClassOption streamOption = new ClassOption("stream", 's',
@@ -36,7 +39,7 @@ public class EvaluatePrequentialDelayedConceptDrift extends ConceptDriftMainTask
     public ClassOption evaluatorOption = new ClassOption("evaluator", 'e',
             "Classification performance evaluation method.",
             LearningPerformanceEvaluator.class,
-            "BasicPartiallyLabeledConceptDriftPerformanceEvaluator");
+            "BasicDelayPartiallyLabeledConceptDriftPerformanceEvaluator");
 
     public IntOption delayLengthOption = new IntOption("delay", 'k',
             "Number of instances before test instance is used for training",
@@ -121,7 +124,7 @@ public class EvaluatePrequentialDelayedConceptDrift extends ConceptDriftMainTask
             int groundTruth = 0;
             if(listDriftposition.size()>0)
                 groundTruth = findGroundTruth(listDriftposition, listDriftWidths, instancesProcessed);
-            System.out.println("Ground Truth: " + groundTruth + " instancesProcessed: " + instancesProcessed);
+            //System.out.println("Ground Truth: " + groundTruth + " instancesProcessed: " + instancesProcessed);
 
 
             if (instancesProcessed <= this.initialWindowSizeOption.getValue()) {

@@ -257,7 +257,7 @@ public class EvaluatePrequentialDelayed extends ClassificationMainTask {
                 testInstance.setClassValue(0.0);
           
                 double[] prediction = learner.getVotesForInstance(testInst);
-    //          reinstate the testInstance as it is used in evaluator.addResult
+                // reinstate the testInstance as it is used in evaluator.addResult
                 testInstance = ((Instance) currentInst.getData()).copy();
                 testInst = new InstanceExample(testInstance);
 

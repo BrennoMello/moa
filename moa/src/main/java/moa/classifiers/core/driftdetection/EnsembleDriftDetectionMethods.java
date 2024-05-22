@@ -83,13 +83,14 @@ public class EnsembleDriftDetectionMethods extends AbstractChangeDetector {
                 preds[i] = true;
             }
         }
+
         int typePrediction = this.predictionOption.getChosenIndex();
-                   int numberDetections = 0;
-            for (int i = 0; i < cds.length; i++) {
-                if (preds[i] == true) {
+        int numberDetections = 0;
+        for (int i = 0; i < cds.length; i++) {
+            if (preds[i] == true) {
                     numberDetections++;
-                }
             }
+        }
         if (typePrediction == 0) { 
             //Choose Max
             this.isChangeDetected = (numberDetections == cds.length);

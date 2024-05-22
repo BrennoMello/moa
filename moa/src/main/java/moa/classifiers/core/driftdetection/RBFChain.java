@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 public class RBFChain extends AbstractChangeDetector {
-    private static final long serialVersionUID = 5210470661274384763L;
+    private static final long serialVersionUID = 5210470661274384764L;
 
     public FloatOption sigma = new FloatOption(
             "sigma",
@@ -18,19 +18,19 @@ public class RBFChain extends AbstractChangeDetector {
 
     public FloatOption lambda = new FloatOption(
             "lambda",
-            'e',
+            'l',
             "Minimum threshold to activate a center",
             0.5, 0.1, Float.MAX_VALUE);
 
     public FloatOption alpha = new FloatOption(
             "alpha",
-            'e',
+            'a',
             "Probability increase factor in Markov Chain",
-            0.05, 0.1, Float.MAX_VALUE);
+            0.05, 0.01, Float.MAX_VALUE);
 
     public FloatOption delta = new FloatOption(
             "delta",
-            'e',
+            'd',
             "Minimum threshold to consider probability in the Markov Chain as a Concept Drift indication.",
             1.0, 0.1, Float.MAX_VALUE);
 

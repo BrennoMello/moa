@@ -3,11 +3,10 @@ package moa.evaluation;
 import com.yahoo.labs.samoa.instances.Instance;
 import com.yahoo.labs.samoa.instances.Prediction;
 import moa.AbstractMOAObject;
-import moa.MOAObject;
 import moa.core.Example;
 import moa.core.Measurement;
 
-public class BasicPartiallyLabeledConceptDriftPerformanceEvaluator extends AbstractMOAObject
+public class BasicDelayPartiallyLabeledConceptDriftPerformanceEvaluator extends AbstractMOAObject
         implements LearningPerformanceEvaluator<Example<Instance>>{
 
     private static final long serialVersionUID = 1L;

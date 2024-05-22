@@ -80,7 +80,7 @@ public class StuddLearner extends AbstractClassifier {
             this.studentChangeDetector.input(studentError);
 
             if(this.studentChangeDetector.getChange()){
-                System.out.println("Change detected");
+                //System.out.println("Change detected");
                 this.studentLearner.resetLearning();
                 this.baseLearner.resetLearning();
 
